@@ -493,8 +493,8 @@ export const Universe = forwardRef<UniverseHandle, Props>(function Universe(
       if (state.isDragging) {
         const dx = e.clientX - state.lastPointer.x;
         const dy = e.clientY - state.lastPointer.y;
-        state.rotation.y += dx * 0.0035;
-        state.rotation.x += dy * 0.0025;
+        state.rotation.y -= dx * 0.0035;
+        state.rotation.x -= dy * 0.0025;
         state.rotation.x = Math.max(-1.2, Math.min(1.2, state.rotation.x));
         state.lastPointer = { x: e.clientX, y: e.clientY };
         userInteracting = true;
@@ -502,6 +502,7 @@ export const Universe = forwardRef<UniverseHandle, Props>(function Universe(
       }
     };
     const onPointerDown = (e: PointerEvent) => {
+      if (e.button !== 0) return; // Only left-click to drag
       state.isDragging = true;
       state.lastPointer = { x: e.clientX, y: e.clientY };
     };
