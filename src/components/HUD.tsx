@@ -8,6 +8,7 @@ type Props = {
   muted: boolean;
   onToggleMute: () => void;
   onSearch: (q: string) => boolean;
+  onOpenInfo: () => void;
 };
 
 export function HUD({
@@ -18,6 +19,7 @@ export function HUD({
   muted,
   onToggleMute,
   onSearch,
+  onOpenInfo,
 }: Props) {
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -80,6 +82,14 @@ export function HUD({
             </button>
           )}
         </form>
+        <span className="h-4 w-px bg-foreground/20" />
+        <button
+          onClick={onOpenInfo}
+          className="text-meta text-muted-foreground hover:text-foreground transition-colors font-medium border border-foreground/20 px-2 py-0.5 rounded text-[0.65rem] tracking-wider uppercase bg-foreground/5 hover:bg-foreground/10"
+          aria-label="View Project Info"
+        >
+          AI
+        </button>
         <span className="h-4 w-px bg-foreground/20" />
         <button
           onClick={onToggleMute}

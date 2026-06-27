@@ -26,6 +26,12 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
   const [hover, setHover] = useState<{ s: StarRecord; x: number; y: number } | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [letterOpen, setLetterOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      return !sessionStorage.getItem("shriks_universe_letter_seen");
+    }
+    return true;
+  });
   const [introOpen, setIntroOpen] = useState(() => getInitialIntroState(initialFocusId));
   const universeRef = useRef<UniverseHandle>(null);
   const createStarFn = useServerFn(createStar);
@@ -59,6 +65,7 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
   }, []);
 
   useEffect(() => {
+    if (letterOpen) return; // Pause intro until the welcome letter is closed
     if (!introOpen) {
       globalHasSeenIntro = true;
       return;
@@ -71,7 +78,7 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
       clearTimeout(t);
       globalHasSeenIntro = true;
     };
-  }, [introOpen]);
+  }, [introOpen, letterOpen]);
 
   const handleSubmit = useCallback(
     async (input: StarInput) => {
@@ -195,9 +202,72 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
         muted={muted}
         onToggleMute={toggleMute}
         onSearch={search}
+        onOpenInfo={() => setLetterOpen(true)}
       />
 
       {formOpen && <StarRitualForm onClose={() => setFormOpen(false)} onSubmit={handleSubmit} />}
+
+      {letterOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#07070a]/90 backdrop-blur-md p-4 animate-fade-in">
+          <div className="max-w-2xl w-full glass-panel p-8 md:p-12 relative animate-scale-in border border-foreground/10 shadow-2xl flex flex-col items-center">
+            {/* Elegant Close Button */}
+            <button
+              onClick={() => {
+                setLetterOpen(false);
+                if (typeof window !== "undefined") {
+                  sessionStorage.setItem("shriks_universe_letter_seen", "true");
+                }
+              }}
+              className="absolute top-6 right-6 text-muted-foreground/60 hover:text-foreground transition-colors text-sm font-light tracking-widest uppercase"
+              aria-label="Close Info"
+            >
+              ✕
+            </button>
+
+            {/* Header */}
+            <div className="text-center mb-8">
+              <span className="text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/50 block mb-2 font-medium">
+                A Living Cosmology
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl tracking-tight text-foreground/90 font-light">
+                Why this platform exists
+              </h2>
+              <div className="h-[1px] w-12 bg-foreground/10 mx-auto mt-4" />
+            </div>
+
+            {/* Letter Body */}
+            <div className="space-y-6 text-foreground/80 leading-relaxed font-light text-sm md:text-base font-sans tracking-wide">
+              <p>
+                The website is built around the idea that every visitor becomes a part of a shared universe. 
+                Each star represents a real person who has interacted with us—whether by joining the waitlist 
+                for our first product, sharing feedback, suggesting new ideas, or simply reaching out. 
+                As more people connect with us, the universe continues to grow, with every new interaction 
+                creating another star.
+              </p>
+              <p>
+                Rather than being a traditional landing page, the website serves as a living visualization 
+                of our community. It allows us to understand what people think, collect their opinions and 
+                suggestions, and build a closer relationship with everyone who joins us. Every star is a 
+                reminder that behind every interaction is a real person contributing to the journey and 
+                helping shape what we build next.
+              </p>
+            </div>
+
+            {/* Action Button */}
+            <button
+              onClick={() => {
+                setLetterOpen(false);
+                if (typeof window !== "undefined") {
+                  sessionStorage.setItem("shriks_universe_letter_seen", "true");
+                }
+              }}
+              className="mt-10 quiet-button px-8 py-3 text-meta text-center tracking-[0.15em] uppercase hover:bg-foreground/5 transition-all duration-300"
+            >
+              Enter the Universe
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
