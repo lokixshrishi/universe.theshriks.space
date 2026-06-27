@@ -85,10 +85,10 @@ export function HUD({
         <span className="h-4 w-px bg-foreground/20" />
         <button
           onClick={onOpenInfo}
-          className="text-meta text-muted-foreground hover:text-foreground transition-colors font-medium border border-foreground/20 px-2 py-0.5 rounded text-[0.65rem] tracking-wider uppercase bg-foreground/5 hover:bg-foreground/10"
+          className="text-muted-foreground hover:text-foreground transition-colors border border-foreground/20 rounded-full w-5 h-5 flex items-center justify-center text-xs font-serif italic bg-foreground/5 hover:bg-foreground/10"
           aria-label="View Project Info"
         >
-          AI
+          i
         </button>
         <span className="h-4 w-px bg-foreground/20" />
         <button
