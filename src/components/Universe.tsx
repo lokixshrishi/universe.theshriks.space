@@ -572,13 +572,13 @@ export const Universe = forwardRef<UniverseHandle, Props>(function Universe(
     renderer.domElement.addEventListener("touchend", onTouchEnd);
 
     // ANIMATE
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
     let raf = 0;
     let lastHover: StarRecord | null = null;
 
     const tick = () => {
       raf = requestAnimationFrame(tick);
-      const t = clock.getElapsedTime();
+      const t = (performance.now() - startTime) / 1000;
       (dust.material as THREE.ShaderMaterial).uniforms.uTime.value = t;
       const sp = stateRef.current?.starsPoints;
       if (sp) (sp.material as THREE.ShaderMaterial).uniforms.uTime.value = t;
