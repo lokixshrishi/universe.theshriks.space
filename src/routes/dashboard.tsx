@@ -1,9 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { getDashboardData } from "@/lib/dashboard.functions";
 
 export const Route = createFileRoute("/dashboard")({
+  beforeLoad: () => {
+    // Dashboard is only accessible in local development
+    if (import.meta.env.PROD) {
+      throw notFound();
+    }
+  },
   component: DashboardComponent,
   head: () => ({
     meta: [{ title: "The Shriks - Dashboard" }],
