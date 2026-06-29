@@ -238,18 +238,10 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
             {/* Letter Body */}
             <div className="space-y-6 text-foreground/80 leading-relaxed font-light text-sm md:text-base font-sans tracking-wide">
               <p>
-                The website is built around the idea that every visitor becomes a part of a shared universe. 
-                Each star represents a real person who has interacted with us—whether by joining the waitlist 
-                for our first product, sharing feedback, suggesting new ideas, or simply reaching out. 
-                As more people connect with us, the universe continues to grow, with every new interaction 
-                creating another star.
+                Every star in this universe represents a real person who has connected with us—by requesting early access, sharing feedback, suggesting ideas, or simply reaching out. As our community grows, so does the universe, turning every interaction into a lasting part of our journey.
               </p>
               <p>
-                Rather than being a traditional landing page, the website serves as a living visualization 
-                of our community. It allows us to understand what people think, collect their opinions and 
-                suggestions, and build a closer relationship with everyone who joins us. Every star is a 
-                reminder that behind every interaction is a real person contributing to the journey and 
-                helping shape what we build next.
+                This isn't just a website—it's a living map of the people helping shape what we build next. Our first product, <strong className="font-semibold text-foreground">LokiAI</strong>, is now in <strong className="font-semibold text-foreground">Beta</strong>, and <strong className="font-semibold text-foreground">Early Access</strong> is officially open. Explore the universe, become a part of it, and request your access at <a href="https://www.lokiai.theshriks.space" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground underline hover:text-foreground/80 transition-colors">www.lokiai.theshriks.space</a>.
               </p>
             </div>
 
