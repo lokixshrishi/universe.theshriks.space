@@ -9,6 +9,7 @@ type Props = {
   onToggleMute: () => void;
   onSearch: (q: string) => boolean;
   onOpenInfo: () => void;
+  onOpenCensus: () => void;
 };
 
 export function HUD({
@@ -20,6 +21,7 @@ export function HUD({
   onToggleMute,
   onSearch,
   onOpenInfo,
+  onOpenCensus,
 }: Props) {
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -101,17 +103,21 @@ export function HUD({
       </div>
 
       {/* Bottom left — counter */}
-      <div className="fixed bottom-20 left-4 md:bottom-7 md:left-8 z-40 animate-slow-fade-in-delayed pointer-events-none">
+      <div className="fixed bottom-20 left-4 md:bottom-7 md:left-8 z-40 animate-slow-fade-in-delayed">
         <p className="text-meta text-muted-foreground mb-1.5">A living census</p>
-        <p className="font-display text-base md:text-lg leading-none">
-          <span>{starCount.toLocaleString()}</span>
+        <button 
+          onClick={onOpenCensus}
+          className="font-display text-base md:text-lg leading-none text-left hover:text-foreground/80 transition-colors group"
+          aria-label="Open Census Directory"
+        >
+          <span className="group-hover:text-foreground transition-colors">{starCount.toLocaleString()}</span>
           <span className="text-muted-foreground"> stars · </span>
-          <span>{nebulaCount}</span>
+          <span className="group-hover:text-foreground transition-colors">{nebulaCount}</span>
           <span className="text-muted-foreground hidden sm:inline"> nebulae · </span>
           <span className="text-muted-foreground sm:hidden"> nebulae </span>
-          <span className="hidden sm:inline">{galaxyCount}</span>
+          <span className="hidden sm:inline group-hover:text-foreground transition-colors">{galaxyCount}</span>
           <span className="text-muted-foreground hidden sm:inline"> galaxies</span>
-        </p>
+        </button>
       </div>
 
       {/* Bottom right — add star */}

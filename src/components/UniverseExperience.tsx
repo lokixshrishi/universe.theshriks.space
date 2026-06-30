@@ -33,6 +33,7 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
     return true;
   });
   const [introOpen, setIntroOpen] = useState(() => getInitialIntroState(initialFocusId));
+  const [censusOpen, setCensusOpen] = useState(false);
   const universeRef = useRef<UniverseHandle>(null);
   const createStarFn = useServerFn(createStar);
   const navigate = useNavigate();
@@ -209,9 +210,59 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
         onToggleMute={toggleMute}
         onSearch={search}
         onOpenInfo={() => setLetterOpen(true)}
+        onOpenCensus={() => setCensusOpen(true)}
       />
 
       {formOpen && <StarRitualForm onClose={() => setFormOpen(false)} onSubmit={handleSubmit} />}
+
+      {censusOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#07070a]/90 backdrop-blur-md p-4 animate-fade-in">
+          <div className="w-full max-w-2xl glass-panel p-6 md:p-10 relative animate-scale-in border border-foreground/10 shadow-2xl h-[85vh] flex flex-col">
+            <button
+              onClick={() => setCensusOpen(false)}
+              className="absolute top-6 right-6 text-muted-foreground/60 hover:text-foreground transition-colors text-sm font-light tracking-widest uppercase z-10"
+              aria-label="Close Census"
+            >
+              ✕
+            </button>
+            <div className="mb-6 flex-shrink-0">
+              <span className="text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/50 block mb-2 font-medium">
+                The Directory
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl tracking-tight text-foreground/90 font-light">
+                Living Census
+              </h2>
+              <div className="h-[1px] w-12 bg-foreground/10 mt-4" />
+            </div>
+            
+            <div className="overflow-y-auto pr-2 space-y-3 flex-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+              {stars.map((star) => (
+                <button
+                  key={star.id}
+                  onClick={() => {
+                    setCensusOpen(false);
+                    handleClickStar(star);
+                  }}
+                  className="w-full text-left p-4 rounded-md bg-foreground/5 hover:bg-foreground/10 transition-colors group flex flex-col gap-2 border border-foreground/5"
+                >
+                  <div className="flex justify-between items-baseline w-full gap-4">
+                    <span className="font-display text-xl text-foreground/90 group-hover:text-foreground transition-colors truncate">{star.name}</span>
+                    <span className="text-[0.6rem] text-muted-foreground/50 uppercase tracking-widest whitespace-nowrap">
+                      {star.category?.replace("-", " ") || "Star"}
+                    </span>
+                  </div>
+                  {star.message && (
+                    <p className="text-sm font-light text-foreground/70 truncate w-full italic">"{star.message}"</p>
+                  )}
+                </button>
+              ))}
+              {stars.length === 0 && (
+                <p className="text-muted-foreground/50 italic font-light text-sm text-center py-12">The universe is currently empty.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {letterOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#07070a]/90 backdrop-blur-md p-4 animate-fade-in">
