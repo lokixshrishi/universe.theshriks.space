@@ -96,6 +96,12 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
       
       setFormOpen(false);
       if (!isMuted()) chime();
+
+      if (input.category === "lokiai-waitlist") {
+        window.location.href = "https://www.lokiai.theshriks.space";
+        return;
+      }
+
       setTimeout(() => universeRef.current?.flyToStar((created as any).id, { close: true }), 350);
     },
     [createStarFn],
