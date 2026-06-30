@@ -247,7 +247,7 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
                 Every star in this universe represents a real person who has connected with us—by requesting early access, sharing feedback, suggesting ideas, or simply reaching out. As our community grows, so does the universe, turning every interaction into a lasting part of our journey.
               </p>
               <p>
-                This isn't just a website—it's a living map of the people helping shape what we build next. Our first product, <strong className="font-semibold text-foreground">LokiAI</strong>, is now in <strong className="font-semibold text-foreground">Beta</strong>, and <strong className="font-semibold text-foreground">Early Access</strong> is officially open. Explore the universe, become a part of it, and request your access at <a href="https://www.lokiai.theshriks.space" target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground underline hover:text-foreground/80 transition-colors">www.lokiai.theshriks.space</a>.
+                This isn't just a website—it's a living map of the people helping shape what we build next. Our first product, <strong className="font-semibold text-foreground">LokiAI</strong>, is now in <strong className="font-semibold text-foreground">Beta</strong>, and <strong className="font-semibold text-foreground">Early Access</strong> is officially open. Explore the universe, become a part of it.
               </p>
             </div>
 
