@@ -24,6 +24,12 @@ export function StarRitualForm({ onClose, onSubmit }: Props) {
   const handle = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    
+    if (!category) {
+      setError("Please choose a category before sending your star.");
+      return;
+    }
+
     const parsed = starSchema.safeParse({ name, email, message, category });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? "Check your fields");
@@ -48,7 +54,7 @@ export function StarRitualForm({ onClose, onSubmit }: Props) {
       />
       <form
         onSubmit={handle}
-        className="relative w-full max-w-xl glass-panel px-6 py-10 md:px-10 md:py-14 animate-slow-fade-in max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-xl glass-panel px-6 py-10 md:px-10 md:py-14 animate-slow-fade-in max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
         style={{ animationDuration: "1.2s" }}
       >
         <p className="text-meta text-muted-foreground mb-6 md:mb-8">The Ritual</p>
