@@ -99,7 +99,7 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
       if (!isMuted()) chime();
 
       if (input.category === "lokiai-waitlist") {
-        window.location.href = "https://www.lokiai.theshriks.space";
+        window.location.href = "https://lokiai.theshriks.space/";
         return;
       }
 
