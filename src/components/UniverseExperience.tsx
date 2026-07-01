@@ -26,12 +26,7 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
   const [hover, setHover] = useState<{ s: StarRecord; x: number; y: number } | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [muted, setMuted] = useState(true);
-  const [letterOpen, setLetterOpen] = useState(() => {
-    if (typeof window !== "undefined") {
-      return !sessionStorage.getItem("shriks_universe_letter_seen");
-    }
-    return true;
-  });
+  const [letterOpen, setLetterOpen] = useState(true);
   const [introOpen, setIntroOpen] = useState(() => getInitialIntroState(initialFocusId));
   const [censusOpen, setCensusOpen] = useState(false);
   const universeRef = useRef<UniverseHandle>(null);
@@ -271,9 +266,6 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
             <button
               onClick={() => {
                 setLetterOpen(false);
-                if (typeof window !== "undefined") {
-                  sessionStorage.setItem("shriks_universe_letter_seen", "true");
-                }
               }}
               className="absolute top-6 right-6 text-muted-foreground/60 hover:text-foreground transition-colors text-sm font-light tracking-widest uppercase"
               aria-label="Close Info"
@@ -306,9 +298,6 @@ export function UniverseExperience({ initialFocusId }: { initialFocusId: string 
             <button
               onClick={() => {
                 setLetterOpen(false);
-                if (typeof window !== "undefined") {
-                  sessionStorage.setItem("shriks_universe_letter_seen", "true");
-                }
               }}
               className="mt-10 quiet-button px-8 py-3 text-meta text-center tracking-[0.15em] uppercase hover:bg-foreground/5 transition-all duration-300"
             >
