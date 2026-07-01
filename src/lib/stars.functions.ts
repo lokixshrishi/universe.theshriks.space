@@ -2,17 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { starSchema } from "./star-utils";
 import { z } from "zod";
-import nodemailer from "nodemailer";
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
 
 function getEmailContent(category: string, name: string) {
   let title = "";
@@ -87,15 +76,27 @@ export const createStar = createServerFn({ method: "POST" })
       // Don't fail the whole flow — star is born; email storage is best-effort.
     }
 
-    if (data.email) {
+    if (data.email && process.env.RESEND_API_KEY) {
       try {
         const { title, html } = getEmailContent(data.category, data.name);
-        await transporter.sendMail({
-          from: `"The Shriks Universe" <${process.env.SMTP_USER}>`,
-          to: data.email,
-          subject: title,
-          html: html,
+        
+        const response = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.RESEND_API_KEY}`
+          },
+          body: JSON.stringify({
+            from: "The Shriks Universe <station@theshriks.space>",
+            to: [data.email],
+            subject: title,
+            html: html,
+          })
         });
+
+        if (!response.ok) {
+          console.error("Resend API error:", await response.text());
+        }
       } catch (err) {
         console.error("Failed to send welcome email:", err);
       }
