@@ -18,21 +18,20 @@ function getEmailContent(category: string, name: string) {
     message = `Hello ${name},<br><br>Your star has been placed, and your message has reached us.<br><br>We are grateful you decided to reach out. Our team will review your signal and respond shortly if needed.<br><br>Welcome to the universe.`;
   }
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <body style="background-color: #07070a; color: #ffffff; font-family: 'Inter', sans-serif; padding: 40px 20px; margin: 0; line-height: 1.6;">
-        <div style="max-w: 500px; margin: 0 auto; border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 4px;">
-          <h2 style="color: #1f8f5d; font-weight: 300; letter-spacing: 1px; margin-top: 0; margin-bottom: 24px;">${title}</h2>
-          <p style="color: rgba(255, 255, 255, 0.8); font-size: 15px;">${message}</p>
-          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-            <p style="color: rgba(255, 255, 255, 0.4); font-size: 12px; margin: 0;">&copy; The Shriks. All rights reserved.</p>
-          </div>
-        </div>
-      </body>
-    </html>
-  `;
-  
+  const html = `<!DOCTYPE html>
+<html>
+  <body style="background-color:#07070a;color:#ffffff;font-family:'Inter',sans-serif;padding:40px 20px;margin:0;line-height:1.7;">
+    <div style="max-width:560px;margin:0 auto;border:1px solid rgba(255,255,255,0.08);padding:48px;border-radius:4px;">
+      <p style="color:#1f8f5d;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin:0 0 28px 0;">The Shriks Universe</p>
+      <h2 style="color:#ffffff;font-weight:300;font-size:24px;letter-spacing:0.5px;margin:0 0 20px 0;">${title}</h2>
+      <div style="height:1px;background:rgba(255,255,255,0.08);margin-bottom:28px;"></div>
+      <p style="color:rgba(255,255,255,0.75);font-size:15px;margin:0 0 32px 0;">${message}</p>
+      <div style="height:1px;background:rgba(255,255,255,0.08);margin-bottom:24px;"></div>
+      <p style="color:rgba(255,255,255,0.3);font-size:11px;margin:0;">&copy; The Shriks. All rights reserved.</p>
+    </div>
+  </body>
+</html>`;
+
   return { title, html };
 }
 
@@ -73,29 +72,17 @@ export const createStar = createServerFn({ method: "POST" })
 
     if (emailError) {
       console.error("star_emails insert error:", emailError);
-      // Don't fail the whole flow — star is born; email storage is best-effort.
+      // Non-fatal — star is born regardless
     }
 
-    if (data.email && process.env.RESEND_API_KEY) {
+    if (data.email) {
       try {
         const { title, html } = getEmailContent(data.category, data.name);
-        
-        const response = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.RESEND_API_KEY}`
-          },
-          body: JSON.stringify({
-            from: "The Shriks Universe <station@theshriks.space>",
-            to: [data.email],
-            subject: title,
-            html: html,
-          })
+        const { error: fnError } = await supabaseAdmin.functions.invoke("send-email", {
+          body: { to: data.email, subject: title, html },
         });
-
-        if (!response.ok) {
-          console.error("Resend API error:", await response.text());
+        if (fnError) {
+          console.error("send-email edge function error:", fnError);
         }
       } catch (err) {
         console.error("Failed to send welcome email:", err);
