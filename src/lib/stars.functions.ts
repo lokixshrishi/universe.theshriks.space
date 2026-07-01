@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { starSchema } from "./star-utils";
 import { z } from "zod";
+import nodemailer from "nodemailer";
 
 function getEmailContent(category: string, name: string) {
   let title = "";
@@ -34,6 +35,14 @@ function getEmailContent(category: string, name: string) {
 
   return { title, html };
 }
+
+const mailer = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 const createStarInput = starSchema.extend({
   x: z.number(),
@@ -72,18 +81,17 @@ export const createStar = createServerFn({ method: "POST" })
 
     if (emailError) {
       console.error("star_emails insert error:", emailError);
-      // Non-fatal — star is born regardless
     }
 
     if (data.email) {
       try {
         const { title, html } = getEmailContent(data.category, data.name);
-        const { error: fnError } = await supabaseAdmin.functions.invoke("send-email", {
-          body: { to: data.email, subject: title, html },
+        await mailer.sendMail({
+          from: `"The Shriks Universe" <${process.env.SMTP_USER}>`,
+          to: data.email,
+          subject: title,
+          html,
         });
-        if (fnError) {
-          console.error("send-email edge function error:", fnError);
-        }
       } catch (err) {
         console.error("Failed to send welcome email:", err);
       }
